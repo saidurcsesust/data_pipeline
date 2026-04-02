@@ -69,7 +69,6 @@ This pipeline reads the local property and reviews JSON files in `data/raw_data/
 
 ## Output
 
-- Final JSON output: `data/warehouse/property_data.json`
 - Iceberg table: `iceberg_catalog.db.property_table`
 - PostgreSQL table: `public.property_table`
 - Validation report: `validation_report.txt`
