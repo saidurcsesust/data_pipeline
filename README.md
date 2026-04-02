@@ -7,7 +7,6 @@ This project implements the assignment with separate Django apps for extraction 
 - `write_iceberg`: writes the final DataFrame into an Iceberg table
 - `write_postgres`: writes the final DataFrame into PostgreSQL via Spark JDBC
 
-The current repository uses local JSON files under `data/raw_data/`. These are mapped in [config.py](/home/w3e39/Documents/data_processing/data_pipeline/config.py).
 
 The pipeline uses one Spark session and, on every run, writes the processed `final_df` to both Iceberg and PostgreSQL.
 
@@ -46,8 +45,6 @@ You can override the Postgres target used by the pipeline with these environment
 
 ## Run
 
-This project no longer defines a custom `process_data` management command, so `python manage.py` now behaves like a normal Django entry point and shows the standard command help when no subcommand is provided.
-
 Run the extractor app against the products API with:
 
 ```bash
@@ -69,11 +66,6 @@ This pipeline reads the local property and reviews JSON files in `data/raw_data/
 - PostgreSQL table output
 - validation report output
 
-There is no runtime switch for choosing sinks. The pipeline always writes to:
-
-- `data/warehouse/property_data.json`
-- `iceberg_catalog.db.property_table`
-- `public.property_table`
 
 ## Output
 
@@ -88,7 +80,7 @@ There is no runtime switch for choosing sinks. The pipeline always writes to:
 After the pipeline runs, you can inspect the loaded table with:
 
 ```bash
-docker exec -it property-pipeline-postgres psql -U pipeline_user -d property_pipeline -c "SELECT COUNT(*) FROM public.property_table;"
+docker exec -it property-pipeline-postgres psql -U pipeline_user -d property_pipeline -c "SELECT * FROM public.property_table;"
 ```
 
 ## Standardized Output Schema
@@ -106,15 +98,6 @@ The processor produces exactly these 10 columns:
 - `review_score`
 - `published`
 
-## Dependencies
-
-- Django
-- PySpark
-- Iceberg support via Spark catalog settings
-- PostgreSQL JDBC driver via Spark package resolution
-- `pyiceberg` for local Iceberg-related dependency coverage
-- Docker for the local PostgreSQL service
-
 ## Assumptions
 
 - `source_id` is derived from each source file's top-level `id` field.
@@ -123,4 +106,4 @@ The processor produces exactly these 10 columns:
 - `review_score` is the average score from the nested `reviews` array.
 - `usd_price` defaults to `0.0` because the provided property feed does not expose a direct USD price field.
 - PostgreSQL writes use Spark JDBC with `overwrite` mode by default.
-- The existing Django app names are preserved and separate writer apps are used for external sinks.
+

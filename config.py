@@ -18,6 +18,8 @@ DEFAULT_CURRENCY = "USD"
 OUTPUT_FILE = OUTPUT_DIR / "property_data.json"
 ICEBERG_TABLE_PATH = "iceberg_catalog.db.property_table"
 ICEBERG_SPARK_PACKAGE = "org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.5.2"
+
+
 POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
 POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
 POSTGRES_DB = os.getenv("POSTGRES_DB", "property_pipeline")
@@ -30,5 +32,7 @@ POSTGRES_JDBC_URL = (
 )
 POSTGRES_SPARK_PACKAGE = "org.postgresql:postgresql:42.7.3"
 SPARK_APP_NAME = "django_property_data_pipeline"
+
+
 LOG_DATE_FORMAT = "%y%m%d"
 LOG_TIME_FORMAT = "%H%M%S"

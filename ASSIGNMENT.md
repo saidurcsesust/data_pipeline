@@ -2,7 +2,7 @@
 
 ## Objective
 
-Build a Django-based data processing system using two separate apps, `Extractor` and `Processor`.
+Build a Django-based data processing system using separate apps for extraction, processing, and output writing.
 ## Description
 
 You are given two JSON files containing accommodation data. Your task is to create a Django project that:
@@ -10,9 +10,7 @@ You are given two JSON files containing accommodation data. Your task is to crea
 1. Uses the Extractor app to load and structure data from JSON files using PySpark DataFrames.
 2. Uses the Processor app to join, transform, and clean the data.
 3. Produces a final standardized dataset with exactly 10 columns.
-4. Optionally writes the final dataset into an Iceberg table.
-
-## Requirements
+4. Writes the final dataset using two writer apps: `write_iceberg` and `write_postgres`.
 
 ## Project Structure
 
@@ -96,7 +94,6 @@ review_score, published}
 #### 5. Data Cleaning Rules
 
 - Remove rows with missing `source_id`
-- If one part of `property_name` is missing, use the available part
 
 ## Output
 
@@ -108,13 +105,13 @@ review_score, published}
 data/warehouse/property_data.json
 ```
 
-- Optionally write into an Iceberg table:
 
-```python
-final_df.write.format("iceberg").mode("overwrite").save("iceberg_catalog.db.property_table")
-```
+### 2. Output Writers
 
-### 2. Validation Report
+- `write_iceberg` writes the final dataset into an Iceberg table.
+- `write_postgres` writes the final dataset into PostgreSQL via Docker.
+
+### 3. Validation Report
 
 Create `validation_report.txt` containing:
 
@@ -126,25 +123,5 @@ Create `validation_report.txt` containing:
 - Final schema
 - Confirmation: exactly 10 columns
 
-## Logging Requirements
 
-- Logs must be stored in:
 
-```text
-logs/<date>/<script_name>_<date>_<time>.json
-```
-
-### Format
-
-- Date: `YYMMDD`
-- Time: `HHMMSS`
-
-### Log Content
-
-- Start processing
-- File read success (Extractor app)
-- Join completion (Processor app)
-- Transformation steps
-- Iceberg write confirmation (if applicable)
-- Validation summary
-- Errors (if any)
